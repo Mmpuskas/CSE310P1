@@ -26,82 +26,150 @@ struct package* orderPackage(int startYear, int endYear, char* field, struct ann
 		}
 	}
 
-	for(int i = 0; i < NO_TEAMS; i++)
-		printf("From oP1: %s\n", dataStruct[0].teams[i].team_name);
-
 	struct package* packPointer = malloc(yearRange * 32 * sizeof(struct package));
 
-	for(int i = 0; i < NO_TEAMS; i++)
-		printf("From oP2: %s\n", dataStruct[0].teams[i].team_name);
-
-	//For each if, you need to end up with a package pointer that has n amount of 
-	//packages full of data
+	//Give each team a name
+	for(int i = 0; i < yearRange; i++)
+		for(int j = 0; j < NO_TEAMS; j++)
+			strcpy(packPointer[j].team_name, dataStruct[yearIndex + i].teams[j].team_name);
+	
+	//Fill in the field to be sorted by
 	if(strcmp(field,"team_name") == 0) //Check field
 	{
-		for(int i = 0; i < yearRange; i++)
-		{
-			for(int j = 0; j < NO_TEAMS; j++)
-			{
-				strcpy(packPointer[j].team_name, dataStruct[yearIndex + i].teams[j].team_name);
-			}
-		}
+		//Do nothing, each sort will need to handle names differently anyway because of output
 	}
 	else if(strcmp(field,"games") == 0)
 	{
+		packPointer[0].type = 'i';
+		for(int i = 0; i < yearRange; i++)
+			for(int j = 0; j < NO_TEAMS; j++)
+				packPointer[j].field.i = dataStruct[yearIndex + i].teams[j].games;
 	}
 	else if(strcmp(field,"pts_per_game") == 0)
 	{
+		packPointer[0].type = 'f';
+		for(int i = 0; i < yearRange; i++)
+			for(int j = 0; j < NO_TEAMS; j++)
+				packPointer[j].field.f = dataStruct[yearIndex + i].teams[j].pts_per_game;
 	}
 	else if(strcmp(field,"total_points") == 0)
 	{
+		packPointer[0].type = 'i';
+		for(int i = 0; i < yearRange; i++)
+			for(int j = 0; j < NO_TEAMS; j++)
+				packPointer[j].field.i = dataStruct[yearIndex + i].teams[j].total_points;
 	}
 	else if(strcmp(field,"scrimmage_plays") == 0)
 	{
+		packPointer[0].type = 'i';
+		for(int i = 0; i < yearRange; i++)
+			for(int j = 0; j < NO_TEAMS; j++)
+				packPointer[j].field.i = dataStruct[yearIndex + i].teams[j].scrimmage_plays;
 	}
 	else if(strcmp(field,"yds_per_game") == 0)
 	{
+		packPointer[0].type = 'f';
+		for(int i = 0; i < yearRange; i++)
+			for(int j = 0; j < NO_TEAMS; j++)
+				packPointer[j].field.f = dataStruct[yearIndex + i].teams[j].yds_per_game;
 	}
 	else if(strcmp(field,"yds_per_play") == 0)
 	{
+		packPointer[0].type = 'f';
+		for(int i = 0; i < yearRange; i++)
+			for(int j = 0; j < NO_TEAMS; j++)
+				packPointer[j].field.f = dataStruct[yearIndex + i].teams[j].yds_per_play;
 	}
 	else if(strcmp(field,"first_per_game") == 0)
 	{
+		packPointer[0].type = 'f';
+		for(int i = 0; i < yearRange; i++)
+			for(int j = 0; j < NO_TEAMS; j++)
+				packPointer[j].field.f = dataStruct[yearIndex + i].teams[j].first_per_game;
 	}
 	else if(strcmp(field,"third_md") == 0)
 	{
+		packPointer[0].type = 'i';
+		for(int i = 0; i < yearRange; i++)
+			for(int j = 0; j < NO_TEAMS; j++)
+				packPointer[j].field.i = dataStruct[yearIndex + i].teams[j].third_md;
 	}
 	else if(strcmp(field,"third_att") == 0)
 	{
+		packPointer[0].type = 'i';
+		for(int i = 0; i < yearRange; i++)
+			for(int j = 0; j < NO_TEAMS; j++)
+				packPointer[j].field.i = dataStruct[yearIndex + i].teams[j].third_att;
 	}
 	else if(strcmp(field,"third_pct") == 0)
 	{
+		packPointer[0].type = 'i';
+		for(int i = 0; i < yearRange; i++)
+			for(int j = 0; j < NO_TEAMS; j++)
+				packPointer[j].field.i = dataStruct[yearIndex + i].teams[j].third_pct;
 	}
 	else if(strcmp(field,"fourth_md") == 0)
 	{
+		packPointer[0].type = 'i';
+		for(int i = 0; i < yearRange; i++)
+			for(int j = 0; j < NO_TEAMS; j++)
+				packPointer[j].field.i = dataStruct[yearIndex + i].teams[j].fourth_md;
 	}
 	else if(strcmp(field,"fourth_att") == 0)
 	{
+		packPointer[0].type = 'i';
+		for(int i = 0; i < yearRange; i++)
+			for(int j = 0; j < NO_TEAMS; j++)
+				packPointer[j].field.i = dataStruct[yearIndex + i].teams[j].fourth_att;
 	}
 	else if(strcmp(field,"fourth_pct") == 0)
 	{
+		packPointer[0].type = 'i';
+		for(int i = 0; i < yearRange; i++)
+			for(int j = 0; j < NO_TEAMS; j++)
+				packPointer[j].field.i = dataStruct[yearIndex + i].teams[j].fourth_pct;
 	}
 	else if(strcmp(field,"penalties") == 0)
 	{
+		packPointer[0].type = 'i';
+		for(int i = 0; i < yearRange; i++)
+			for(int j = 0; j < NO_TEAMS; j++)
+				packPointer[j].field.i = dataStruct[yearIndex + i].teams[j].penalties;
 	}
 	else if(strcmp(field,"pen_yds") == 0)
 	{
+		packPointer[0].type = 'i';
+		for(int i = 0; i < yearRange; i++)
+			for(int j = 0; j < NO_TEAMS; j++)
+				packPointer[j].field.i = dataStruct[yearIndex + i].teams[j].pen_yds;
 	}
 	else if(strcmp(field,"top_per_game") == 0)
 	{
+		packPointer[0].type = 's';
+		for(int i = 0; i < yearRange; i++)
+			for(int j = 0; j < NO_TEAMS; j++)
+				strcpy(packPointer[j].field.c, dataStruct[yearIndex + i].teams[j].top_per_game);
 	}
 	else if(strcmp(field,"fum") == 0)
 	{
+		packPointer[0].type = 'i';
+		for(int i = 0; i < yearRange; i++)
+			for(int j = 0; j < NO_TEAMS; j++)
+				packPointer[j].field.i = dataStruct[yearIndex + i].teams[j].fum;
 	}
 	else if(strcmp(field,"lost") == 0)
 	{
+		packPointer[0].type = 'i';
+		for(int i = 0; i < yearRange; i++)
+			for(int j = 0; j < NO_TEAMS; j++)
+				packPointer[j].field.i = dataStruct[yearIndex + i].teams[j].lost;
 	}
 	else if(strcmp(field,"to") == 0)
 	{
+		packPointer[0].type = 'i';
+		for(int i = 0; i < yearRange; i++)
+			for(int j = 0; j < NO_TEAMS; j++)
+				packPointer[j].field.i = dataStruct[yearIndex + i].teams[j].to;
 	}
 
 	return packPointer;

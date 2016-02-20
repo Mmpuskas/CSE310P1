@@ -309,6 +309,8 @@ void processCommands(char* linePointer, struct annual_stats* dataStruct)
 				char* order = strtok(NULL,delim);
 
 				struct package* package = orderPackage(year, year, field, dataStruct);
+				for(int i = 0; i < 32; i++)
+					printf("Data: %d\n",package[i].field.i);
 
 				//bSortY(package, field, order);
 			}
