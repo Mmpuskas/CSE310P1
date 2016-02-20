@@ -32,10 +32,15 @@ struct package* orderPackage(int startYear, int endYear, char* field, struct ann
 	for(int i = 0; i < yearRange; i++)
 		for(int j = 0; j < NO_TEAMS; j++)
 			strcpy(packPointer[j].team_name, dataStruct[yearIndex + i].teams[j].team_name);
+	//Give each team the appropriate year
+	for(int i = 0; i < yearRange; i++)
+		for(int j = 0; j < NO_TEAMS; j++)
+			packPointer[j].year = dataStruct[yearIndex + i].year;
 	
 	//Fill in the field to be sorted by
 	if(strcmp(field,"team_name") == 0) //Check field
 	{
+		packPointer[0].type = 'n';
 		//Do nothing, each sort will need to handle names differently anyway because of output
 	}
 	else if(strcmp(field,"games") == 0)
@@ -145,7 +150,7 @@ struct package* orderPackage(int startYear, int endYear, char* field, struct ann
 	}
 	else if(strcmp(field,"top_per_game") == 0)
 	{
-		packPointer[0].type = 's';
+		packPointer[0].type = 'c';
 		for(int i = 0; i < yearRange; i++)
 			for(int j = 0; j < NO_TEAMS; j++)
 				strcpy(packPointer[j].field.c, dataStruct[yearIndex + i].teams[j].top_per_game);

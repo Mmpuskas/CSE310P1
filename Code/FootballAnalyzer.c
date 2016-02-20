@@ -132,29 +132,16 @@ struct annual_stats* processData(char* linePointer)
  */
 void bSortY(struct package* package, char* field, char* order) 
 {
-	/*
-	int indexOfYear = -1;
-
-	//Check if the year passed is a valid one
-	for(int i = 0; i < numYears; i++)
-		if(yearArr[i] == year)
-			indexOfYear = i;	
-	if(indexOfYear == -1)
-	{
-		printf("Selected year is not in the data set\n");
-		return;
-	}
-
 	//Set a string to be used in the output
 	char* ord = "Ascending ";
 	if(order[0] == 'd')
 	       	ord = "Descending";
 
-	printf("\n#######  %d Ranking by %s  #######\n",package[0].year, field);
-	printf("#######      %s Order       #######\n",ord);
+	printf("\n#######  %d Ranking by %s  #######\n", package[0].year, field);
+	printf("#######      %s Order       #######\n", ord);
 
 	//Split fields based on data type, call appropraite function
-	if(package[0].type == 'c')
+	if(package[0].type == 'c' || package[0].type == 'n')
 	{
 		bSortChar(package, order);
 	}
@@ -168,7 +155,6 @@ void bSortY(struct package* package, char* field, char* order)
 	}
 	else
 		printf("field unrecognized");
-		*/
 }
 
 /*
@@ -279,9 +265,6 @@ void bSortR(int start, int end, char* field, char* order, struct annual_stats* d
 }
 */
 
-
-
-
 /*
  * Break up commands into data that can be passed into the function
  * Parameters:
@@ -309,10 +292,8 @@ void processCommands(char* linePointer, struct annual_stats* dataStruct)
 				char* order = strtok(NULL,delim);
 
 				struct package* package = orderPackage(year, year, field, dataStruct);
-				for(int i = 0; i < 32; i++)
-					printf("Data: %d\n",package[i].field.i);
 
-				//bSortY(package, field, order);
+				bSortY(package, field, order);
 			}
 			else if(temp[0] == 'r')
 			{
