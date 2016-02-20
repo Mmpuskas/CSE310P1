@@ -12,7 +12,7 @@
 #define NO_TEAMS      32 // Number of NFL teams
 #define TEAM_NAME_LEN 25 // Maximum team name string length
 #define TOP_LEN        6 // Maximum time of possession string length
-
+/*
 //Bubble sort for characters. 
 void bSortChar(struct team_stats* teamStruct, char* field, char* order)
 {
@@ -869,4 +869,5 @@ void bSortFloatRange(struct annual_stats* teamStruct, char* field, char* order)
 				printf("%2d.\t%-25s\t%-3.1f\n", i+1, teamStruct[i].team_name, teamStruct[i].first_per_game);
 	}
 }
+
 */

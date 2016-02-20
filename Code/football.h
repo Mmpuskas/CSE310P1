@@ -33,18 +33,28 @@ struct team_stats {
 	int fum; // Number of fumbles
 	int lost; // Fumbles lost
 	int to; // Turnover ratio
-	int year; // Year of NFL team
 };
 //Struct to hold multiple years worth of data
 struct annual_stats {
 	int year;
 	struct team_stats* teams;
 };
+//Interstitial struct to hold the single relevant field of data based on the command given.
+struct package {
+	char team_name[TEAM_NAME_LEN];
+	union Field{
+		int i;
+		float f;
+		char c[TOP_LEN];
+	}field;
+	int year;
+	char type;
+};
 
 //Below are bubble sort implementations to sort various data types, sort then find, and sort larger ranges of data
-void bSortChar(struct team_stats* teamStruct, char* field, char* order);
-void bSortInt(struct team_stats* teamStruct, char* field, char* order);
-void bSortFloat(struct team_stats* teamStruct, char* field, char* order);
+void bSortChar(struct package* package, char* order);
+void bSortInt(struct package* package, char* order);
+void bSortFloat(struct package* package, char* order);
 void bFindChar(struct team_stats* teamStruct, char* field, char* item);
 void bFindInt(struct team_stats* teamStruct, char* field, char* item);
 void bFindFloat(struct team_stats* teamStruct, char* field, char* item);
