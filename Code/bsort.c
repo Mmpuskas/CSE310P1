@@ -12,25 +12,81 @@
 #define NO_TEAMS      32 // Number of NFL teams
 #define TEAM_NAME_LEN 25 // Maximum team name string length
 #define TOP_LEN        6 // Maximum time of possession string length
+
 //Bubble sort for characters. 
-void bSortChar(struct package* package, char* order)
+void bSortChar(struct package* package, int maxIndex)
 {
 	if(package[0].type == 'n') //Check type 
 	{
 		char temp[TEAM_NAME_LEN];
 		//Bubble sort
-		for(int i = 0; i < NO_TEAMS - 1; i++)
-		{
-			for(int j = i+1; j < NO_TEAMS; j++)
-			{
+		for(int i = 0; i < maxIndex - 1; i++)
+			for(int j = i+1; j < maxIndex; j++)
 				if(strcmp(package[i].team_name, package[j].team_name) > 0)
 				{
 					strcpy(temp, package[i].team_name);
 				        strcpy(package[i].team_name, package[j].team_name);	
 					strcpy(package[j].team_name, temp);
 				}
+	}	
+	else 
+	{
+		for(int i = 0; i < maxIndex - 1; i++)
+			for(int j = i+1; j < maxIndex; j++)
+				if(strcmp(package[i].field.c, package[j].field.c) > 0)
+				{
+					struct package temp = package[i];
+					package[i] = package[j];
+					package[j] = temp;
+				}
+	}
+}
+//Bubble sort for Integers
+void bSortInt(struct package* package, int maxIndex)
+{
+	for(int i = 0; i < maxIndex - 1; i++)
+		for(int j = i+1; j < maxIndex; j++)
+			if(package[i].field.i < package[j].field.i)
+			{
+				struct package temp = package[i];
+				package[i] = package[j];
+				package[j] = temp;
 			}
-		}
+}
+//Bubble sort for Floats
+void bSortFloat(struct package* package, int maxIndex)
+{
+	for(int i = 0; i < maxIndex - 1; i++)
+		for(int j = i+1; j < maxIndex; j++)
+			if(package[i].field.i < package[j].field.i)
+			{
+				struct package temp = package[i];
+				package[i] = package[j];
+				package[j] = temp;
+			}
+}
+
+/*
+ * Calls a function to sort the data in dataStruct based on the field passed
+ * Parameters:
+ * 	struct package* package  - Holds the data relevant to sorting 
+ * 	char* field - Declares which field in team_stats to sort by
+ * 	char* order - Declares whether to sort in ascending or descending order
+ */
+void bSortY(struct package* package, char* field, char* order) 
+{
+	//Set a string to be used in the output
+	char* ord = "Ascending ";
+	if(order[0] == 'd')
+	       	ord = "Descending";
+
+	printf("\n#######  %d Ranking by %s  #######\n", package[0].year, field);
+	printf("#######      %s Order       #######\n", ord);
+
+	//Split fields based on data type, call appropraite function
+	if(package[0].type == 'n') //Specific name condition because the formatting is different on the print
+	{
+		bSortChar(package, NO_TEAMS);
 		//Output sorted data based on order
 		if(order[0] == 'i')
 			for(int i = 0; i < NO_TEAMS; i++)
@@ -38,21 +94,10 @@ void bSortChar(struct package* package, char* order)
 		else if(order[0] == 'd')
 			for(int i = NO_TEAMS-1; i >= 0; i--)
 				printf("%2d.\t%-25s\t\n", i+1, package[i].team_name);
-	}	
-	else 
+	}
+	else if(package[0].type == 'c') //Char
 	{
-		for(int i = 0; i < NO_TEAMS - 1; i++)
-		{
-			for(int j = i+1; j < NO_TEAMS; j++)
-			{
-				if(strcmp(package[i].field.c, package[j].field.c) > 0)
-				{
-					struct package temp = package[i];
-					package[i] = package[j];
-					package[j] = temp;
-				}
-			}
-		}
+		bSortChar(package, NO_TEAMS);
 		if(order[0] == 'i')
 			for(int i = 0; i < NO_TEAMS; i++)
 				printf("%2d.\t%-25s\t%-3s\n", i+1, package[i].team_name, package[i].field.c);
@@ -60,472 +105,26 @@ void bSortChar(struct package* package, char* order)
 			for(int i = NO_TEAMS-1; i >= 0; i--)
 				printf("%2d.\t%-25s\t%-3s\n", i+1, package[i].team_name, package[i].field.c);
 	}
+	else if(package[0].type == 'i') //Int	
+	{
+		bSortInt(package, NO_TEAMS);
+		if(order[0] == 'd')
+			for(int i = 0; i < NO_TEAMS; i++)
+				printf("%2d.\t%-25s\t%d\n", i+1, package[i].team_name, package[i].field.i);
+		else if(order[0] == 'i')
+			for(int i = NO_TEAMS-1; i >= 0; i--)
+				printf("%2d.\t%-25s\t%d\n", i+1, package[i].team_name, package[i].field.i);
+	}
+	else if(package[0].type == 'f') //Float
+	{
+		bSortFloat(package, NO_TEAMS);
+		if(order[0] == 'd')
+			for(int i = 0; i < NO_TEAMS; i++)
+				printf("%2d.\t%-25s\t%-3.1f\n", i+1, package[i].team_name, package[i].field.f);
+		else if(order[0] == 'i')
+			for(int i = NO_TEAMS-1; i >= 0; i--)
+				printf("%2d.\t%-25s\t%-3.1f\n", i+1, package[i].team_name, package[i].field.f);
+	}
+	else
+		printf("field unrecognized");
 }
-
-//Bubble sort for Integers
-void bSortInt(struct package* package, char* order)
-{
-	for(int i = 0; i < NO_TEAMS - 1; i++)
-	{
-		for(int j = i+1; j < NO_TEAMS; j++)
-		{
-			if(package[i].field.i < package[j].field.i)
-			{
-				struct package temp = package[i];
-				package[i] = package[j];
-				package[j] = temp;
-			}
-		}
-	}
-
-	if(order[0] == 'd')
-		for(int i = 0; i < NO_TEAMS; i++)
-			printf("%2d.\t%-25s\t%d\n", i+1, package[i].team_name, package[i].field.i);
-	else if(order[0] == 'i')
-		for(int i = NO_TEAMS-1; i >= 0; i--)
-			printf("%2d.\t%-25s\t%d\n", i+1, package[i].team_name, package[i].field.i);
-}
-
-//Bubble sort for Floats
-void bSortFloat(struct package* package, char* order)
-{
-	for(int i = 0; i < NO_TEAMS - 1; i++)
-	{
-		for(int j = i+1; j < NO_TEAMS; j++)
-		{
-			if(package[i].field.i < package[j].field.i)
-			{
-				struct package temp = package[i];
-				package[i] = package[j];
-				package[j] = temp;
-			}
-		}
-	}
-
-	if(order[0] == 'd')
-		for(int i = 0; i < NO_TEAMS; i++)
-			printf("%2d.\t%-25s\t%-3.1f\n", i+1, package[i].team_name, package[i].field.f);
-	else if(order[0] == 'i')
-		for(int i = NO_TEAMS-1; i >= 0; i--)
-			printf("%2d.\t%-25s\t%-3.1f\n", i+1, package[i].team_name, package[i].field.f);
-}
-
-//Broken code for sorting Range
-/*
-void bSortCharRange(struct annual_stats* teamStruct, char* field, char* order)
-{
-	if(strcmp(field,"team_name") == 0)
-	{
-		for(int i = 0; i < NO_TEAMS - 1; i++)
-		{
-			for(int j = i+1; j < NO_TEAMS; j++)
-			{
-				if(strcmp(teamStruct[i].team_name,teamStruct[j].team_name) > 0)
-				{
-					struct team_stats temp = teamStruct[i];
-					teamStruct[i] = teamStruct[j];	
-					teamStruct[j] = temp;
-				}
-			}
-		}
-		if(order[0] == 'i')
-			for(int i = 0; i < NO_TEAMS; i++)
-				printf("%2d.\t%-25s\t\n", i+1, teamStruct[i].team_name);
-		else if(order[0] == 'd')
-			for(int i = NO_TEAMS-1; i >= 0; i--)
-				printf("%2d.\t%-25s\t\n", i+1, teamStruct[i].team_name);
-	}	
-
-}
-
-
-void bSortIntRange(struct annual_stats* teamStruct, char* field, char* order, int length)
-{
-	if(strcmp(field,"games") == 0)
-	{
-		for(int i = 0; i < NO_TEAMS * length - 1; i++)
-		{
-			for(int j = i+1; j < NO_TEAMS * length; j++)	
-			{
-				if(teamStruct[i].teams.games < teamStruct[j].games)
-				{
-					struct team_stats temp = teamStruct[i];
-					teamStruct[i] = teamStruct[j];
-					teamStruct[j] = temp;
-				}
-			}
-		}
-		if(order[0] == 'd')
-			for(int i = 0; i < NO_TEAMS; i++)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].games);
-		else if(order[0] == 'i')
-			for(int i = NO_TEAMS-1; i >= 0; i--)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].games);
-	}
-	
-	else if(strcmp(field,"total_points") == 0)
-	{
-		for(int i = 0; i < NO_TEAMS - 1; i++)
-		{
-			for(int j = i+1; j < NO_TEAMS; j++)	
-			{
-				if(teamStruct[i].total_points < teamStruct[j].total_points)
-				{
-					struct team_stats temp = teamStruct[i];
-					teamStruct[i] = teamStruct[j];
-					teamStruct[j] = temp;
-				}
-			}
-		}
-		if(order[0] == 'd')
-			for(int i = 0; i < NO_TEAMS; i++)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].total_points);
-		else if(order[0] == 'i')
-			for(int i = NO_TEAMS-1; i >= 0; i--)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].total_points);
-	}
-	else if(strcmp(field,"scrimmage_plays") == 0)
-	{
-		for(int i = 0; i < NO_TEAMS - 1; i++)
-		{
-			for(int j = i+1; j < NO_TEAMS; j++)	
-			{
-				if(teamStruct[i].scrimmage_plays < teamStruct[j].scrimmage_plays)
-				{
-					struct team_stats temp = teamStruct[i];
-					teamStruct[i] = teamStruct[j];
-					teamStruct[j] = temp;
-				}
-			}
-		}
-		if(order[0] == 'd')
-			for(int i = 0; i < NO_TEAMS; i++)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].scrimmage_plays);
-		else if(order[0] == 'i')
-			for(int i = NO_TEAMS-1; i >= 0; i--)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].scrimmage_plays);
-	}
-	else if(strcmp(field,"third_md") == 0)
-	{
-		for(int i = 0; i < NO_TEAMS - 1; i++)
-		{
-			for(int j = i+1; j < NO_TEAMS; j++)	
-			{
-				if(teamStruct[i].third_md < teamStruct[j].third_md)
-				{
-					struct team_stats temp = teamStruct[i];
-					teamStruct[i] = teamStruct[j];
-					teamStruct[j] = temp;
-				}
-			}
-		}
-		if(order[0] == 'd')
-			for(int i = 0; i < NO_TEAMS; i++)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].third_md);
-		else if(order[0] == 'i')
-			for(int i = NO_TEAMS-1; i >= 0; i--)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].third_md);
-	}
-	else if(strcmp(field,"third_att") == 0)
-	{
-		for(int i = 0; i < NO_TEAMS - 1; i++)
-		{
-			for(int j = i+1; j < NO_TEAMS; j++)	
-			{
-				if(teamStruct[i].third_att < teamStruct[j].third_att)
-				{
-					struct team_stats temp = teamStruct[i];
-					teamStruct[i] = teamStruct[j];
-					teamStruct[j] = temp;
-				}
-			}
-		}
-		if(order[0] == 'd')
-			for(int i = 0; i < NO_TEAMS; i++)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].third_att);
-		else if(order[0] == 'i')
-			for(int i = NO_TEAMS-1; i >= 0; i--)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].third_att);
-	}
-	else if(strcmp(field,"third_pct") == 0)
-	{
-		for(int i = 0; i < NO_TEAMS - 1; i++)
-		{
-			for(int j = i+1; j < NO_TEAMS; j++)	
-			{
-				if(teamStruct[i].third_pct < teamStruct[j].third_pct)
-				{
-					struct team_stats temp = teamStruct[i];
-					teamStruct[i] = teamStruct[j];
-					teamStruct[j] = temp;
-				}
-			}
-		}
-		if(order[0] == 'd')
-			for(int i = 0; i < NO_TEAMS; i++)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].third_pct);
-		else if(order[0] == 'i')
-			for(int i = NO_TEAMS-1; i >= 0; i--)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].third_pct);
-	}
-	else if(strcmp(field,"fourth_md") == 0)
-	{
-		for(int i = 0; i < NO_TEAMS - 1; i++)
-		{
-			for(int j = i+1; j < NO_TEAMS; j++)	
-			{
-				if(teamStruct[i].fourth_md < teamStruct[j].fourth_md)
-				{
-					struct team_stats temp = teamStruct[i];
-					teamStruct[i] = teamStruct[j];
-					teamStruct[j] = temp;
-				}
-			}
-		}
-		if(order[0] == 'd')
-			for(int i = 0; i < NO_TEAMS; i++)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].fourth_md);
-		else if(order[0] == 'i')
-			for(int i = NO_TEAMS-1; i >= 0; i--)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].fourth_md);
-	}
-	else if(strcmp(field,"fourth_att") == 0)
-	{
-		for(int i = 0; i < NO_TEAMS - 1; i++)
-		{
-			for(int j = i+1; j < NO_TEAMS; j++)	
-			{
-				if(teamStruct[i].fourth_att < teamStruct[j].fourth_att)
-				{
-					struct team_stats temp = teamStruct[i];
-					teamStruct[i] = teamStruct[j];
-					teamStruct[j] = temp;
-				}
-			}
-		}
-		if(order[0] == 'd')
-			for(int i = 0; i < NO_TEAMS; i++)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].fourth_att);
-		else if(order[0] == 'i')
-			for(int i = NO_TEAMS-1; i >= 0; i--)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].fourth_att);
-	}
-	else if(strcmp(field,"fourth_pct") == 0)
-	{
-		for(int i = 0; i < NO_TEAMS - 1; i++)
-		{
-			for(int j = i+1; j < NO_TEAMS; j++)	
-			{
-				if(teamStruct[i].fourth_pct < teamStruct[j].fourth_pct)
-				{
-					struct team_stats temp = teamStruct[i];
-					teamStruct[i] = teamStruct[j];
-					teamStruct[j] = temp;
-				}
-			}
-		}
-		if(order[0] == 'd')
-			for(int i = 0; i < NO_TEAMS; i++)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].fourth_pct);
-		else if(order[0] == 'i')
-			for(int i = NO_TEAMS-1; i >= 0; i--)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].fourth_pct);
-	}
-	else if(strcmp(field,"penalties") == 0)
-	{
-		for(int i = 0; i < NO_TEAMS - 1; i++)
-		{
-			for(int j = i+1; j < NO_TEAMS; j++)	
-			{
-				if(teamStruct[i].penalties < teamStruct[j].penalties)
-				{
-					struct team_stats temp = teamStruct[i];
-					teamStruct[i] = teamStruct[j];
-					teamStruct[j] = temp;
-				}
-			}
-		}
-		if(order[0] == 'd')
-			for(int i = 0; i < NO_TEAMS; i++)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].penalties);
-		else if(order[0] == 'i')
-			for(int i = NO_TEAMS-1; i >= 0; i--)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].penalties);
-	}
-	else if(strcmp(field,"pen_yds") == 0)
-	{
-		for(int i = 0; i < NO_TEAMS - 1; i++)
-		{
-			for(int j = i+1; j < NO_TEAMS; j++)	
-			{
-				if(teamStruct[i].pen_yds < teamStruct[j].pen_yds)
-				{
-					struct team_stats temp = teamStruct[i];
-					teamStruct[i] = teamStruct[j];
-					teamStruct[j] = temp;
-				}
-			}
-		}
-		if(order[0] == 'd')
-			for(int i = 0; i < NO_TEAMS; i++)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].pen_yds);
-		else if(order[0] == 'i')
-			for(int i = NO_TEAMS-1; i >= 0; i--)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].pen_yds);
-	}
-	else if(strcmp(field,"fum") == 0)
-	{
-		for(int i = 0; i < NO_TEAMS - 1; i++)
-		{
-			for(int j = i+1; j < NO_TEAMS; j++)	
-			{
-				if(teamStruct[i].fum < teamStruct[j].fum)
-				{
-					struct team_stats temp = teamStruct[i];
-					teamStruct[i] = teamStruct[j];
-					teamStruct[j] = temp;
-				}
-			}
-		}
-		if(order[0] == 'd')
-			for(int i = 0; i < NO_TEAMS; i++)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].fum);
-		else if(order[0] == 'i')
-			for(int i = NO_TEAMS-1; i >= 0; i--)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].fum);
-	}
-	else if(strcmp(field,"lost") == 0)
-	{
-		for(int i = 0; i < NO_TEAMS - 1; i++)
-		{
-			for(int j = i+1; j < NO_TEAMS; j++)	
-			{
-				if(teamStruct[i].lost < teamStruct[j].penalties)
-				{
-					struct team_stats temp = teamStruct[i];
-					teamStruct[i] = teamStruct[j];
-					teamStruct[j] = temp;
-				}
-			}
-		}
-		if(order[0] == 'd')
-			for(int i = 0; i < NO_TEAMS; i++)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].lost);
-		else if(order[0] == 'i')
-			for(int i = NO_TEAMS-1; i >= 0; i--)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].lost);
-	}
-	else if(strcmp(field,"to") == 0)
-	{
-		for(int i = 0; i < NO_TEAMS - 1; i++)
-		{
-			for(int j = i+1; j < NO_TEAMS; j++)	
-			{
-				if(teamStruct[i].to < teamStruct[j].to)
-				{
-					struct team_stats temp = teamStruct[i];
-					teamStruct[i] = teamStruct[j];
-					teamStruct[j] = temp;
-				}
-				
-			}
-		}
-		if(order[0] == 'd')
-			for(int i = 0; i < NO_TEAMS; i++)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].to);
-		else if(order[0] == 'i')
-			for(int i = NO_TEAMS-1; i >= 0; i--)
-				printf("%2d.\t%-25s\t%-3d\n", i+1, teamStruct[i].team_name, teamStruct[i].to);
-	}
-	
-}
-
-void bSortFloatRange(struct annual_stats* teamStruct, char* field, char* order)
-{
-	if(strcmp(field,"pts_per_game") == 0) 
-	{
-		for(int i = 0; i < NO_TEAMS - 1; i++)
-		{
-			for(int j = i+1; j < NO_TEAMS; j++)	
-			{
-				if(teamStruct[i].pts_per_game < teamStruct[j].pts_per_game)
-				{
-					struct team_stats temp = teamStruct[i];
-					teamStruct[i] = teamStruct[j];
-					teamStruct[j] = temp;
-				}
-			}
-		}
-		if(order[0] == 'd')
-			for(int i = 0; i < NO_TEAMS; i++)
-				printf("%2d.\t%-25s\t%-3.1f\n", i+1, teamStruct[i].team_name, teamStruct[i].pts_per_game);
-		else if(order[0] == 'i')
-			for(int i = NO_TEAMS-1; i >= 0; i--)
-				printf("%2d.\t%-25s\t%-3.1f\n", i+1, teamStruct[i].team_name, teamStruct[i].pts_per_game);
-	}
-	else if (strcmp(field,"yds_per_game") == 0)
-	{
-		for(int i = 0; i < NO_TEAMS - 1; i++)
-		{
-			for(int j = i+1; j < NO_TEAMS; j++)	
-			{
-				if(teamStruct[i].yds_per_game < teamStruct[j].yds_per_game)
-				{
-					struct team_stats temp = teamStruct[i];
-					teamStruct[i] = teamStruct[j];
-					teamStruct[j] = temp;
-				}
-			}
-		}
-		if(order[0] == 'd')
-			for(int i = 0; i < NO_TEAMS; i++)
-				printf("%2d.\t%-25s\t%-3.1f\n", i+1, teamStruct[i].team_name, teamStruct[i].yds_per_game);
-		else if(order[0] == 'i')
-			for(int i = NO_TEAMS-1; i >= 0; i--)
-				printf("%2d.\t%-25s\t%-3.1f\n", i+1, teamStruct[i].team_name, teamStruct[i].yds_per_game);
-	}
-       	else if(strcmp(field,"yds_per_play") == 0)
-	{
-		for(int i = 0; i < NO_TEAMS - 1; i++)
-		{
-			for(int j = i+1; j < NO_TEAMS; j++)	
-			{
-				if(teamStruct[i].yds_per_play < teamStruct[j].yds_per_play)
-				{
-					struct team_stats temp = teamStruct[i];
-					teamStruct[i] = teamStruct[j];
-					teamStruct[j] = temp;
-				}
-			}
-		}
-		if(order[0] == 'd')
-			for(int i = 0; i < NO_TEAMS; i++)
-				printf("%2d.\t%-25s\t%-3.1f\n", i+1, teamStruct[i].team_name, teamStruct[i].yds_per_play);
-		else if(order[0] == 'i')
-			for(int i = NO_TEAMS-1; i >= 0; i--)
-				printf("%2d.\t%-25s\t%-3.1f\n", i+1, teamStruct[i].team_name, teamStruct[i].yds_per_play);
-	}
-       	else if(strcmp(field,"first_per_game") == 0)
-	{
-		for(int i = 0; i < NO_TEAMS - 1; i++)
-		{
-			for(int j = i+1; j < NO_TEAMS; j++)	
-			{
-				if(teamStruct[i].first_per_game < teamStruct[j].first_per_game)
-				{
-					struct team_stats temp = teamStruct[i];
-					teamStruct[i] = teamStruct[j];
-					teamStruct[j] = temp;
-				}
-			}
-		}
-		if(order[0] == 'd')
-			for(int i = 0; i < NO_TEAMS; i++)
-				printf("%2d.\t%-25s\t%-3.1f\n", i+1, teamStruct[i].team_name, teamStruct[i].first_per_game);
-		else if(order[0] == 'i')
-			for(int i = NO_TEAMS-1; i >= 0; i--)
-				printf("%2d.\t%-25s\t%-3.1f\n", i+1, teamStruct[i].team_name, teamStruct[i].first_per_game);
-	}
-}
-
-*/

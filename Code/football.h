@@ -45,19 +45,18 @@ struct package {
 	union Field{
 		int i;
 		float f;
-		char c[TOP_LEN];
+		char c[TEAM_NAME_LEN];
 	}field;
 	int year;
 	char type;
 };
 
 //Below are bubble sort implementations to sort various data types, sort then find, and sort larger ranges of data
-void bSortChar(struct package* package, char* order);
-void bSortInt(struct package* package, char* order);
-void bSortFloat(struct package* package, char* order);
-void bFindChar(struct team_stats* teamStruct, char* field, char* item);
-void bFindInt(struct team_stats* teamStruct, char* field, char* item);
-void bFindFloat(struct team_stats* teamStruct, char* field, char* item);
+void bSortChar(struct package* package, int maxIndex);
+void bSortInt(struct package* package, int maxIndex);
+void bSortFloat(struct package* package, int maxIndex);
+void bSortY(struct package* package, char* field, char* order);
+void bFind(struct package* package, char* field, char* item);
 void bSortCharRange(struct annual_stats* teamStruct, char* field, char* order, int length);
 void bSortIntRange(struct annual_stats* teamStruct, char* field, char* order, int length);
 void bSortFloatRange(struct annual_stats* teamStruct, char* field, char* order, int length);

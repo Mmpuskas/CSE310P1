@@ -122,148 +122,63 @@ struct annual_stats* processData(char* linePointer)
 	return allYearData;
 }
 
-/*
- * Calls an external function to sort the data in dataStruct based on the field passed
- * Parameters:
- * 	int year
- * 	char* field - Declares which field in team_stats to sort by
- * 	char* order - Declares whether to sort in ascending or descending order
- * 	struct annual_stats* dataStruct - Holds the data processed from stdin
- */
-void bSortY(struct package* package, char* field, char* order) 
+
+void bSortR(struct package* package, char* field, char* order, int yearDif) //bSort range
 {
-	//Set a string to be used in the output
 	char* ord = "Ascending ";
 	if(order[0] == 'd')
 	       	ord = "Descending";
 
-	printf("\n#######  %d Ranking by %s  #######\n", package[0].year, field);
-	printf("#######      %s Order       #######\n", ord);
-
-	//Split fields based on data type, call appropraite function
-	if(package[0].type == 'c' || package[0].type == 'n')
-	{
-		bSortChar(package, order);
-	}
-	else if(package[0].type == 'i')	
-	{
-		bSortInt(package, order);
-	}
-	else if(package[0].type == 'f')
-	{
-		bSortFloat(package, order);
-	}
-	else
-		printf("field unrecognized");
-}
-
-/*
- * Sorts the data set, then finds a value based on given item and field
- * Parameters:
- * 	int year
- *	char* field - What to sort by
- *	char* item - Max, Min, Average, Median
- *	struct annual_stats* dataStruct - Data from stdin
- */
-void bFind(int year, char* field, char* item, struct annual_stats* dataStruct) //bFind year
-{
-	int indexOfYear = -1;
-
-	for(int i = 0; i < numYears; i++)
-		if(yearArr[i] == year)
-			indexOfYear = i;	
-	if(indexOfYear == -1)
-	{
-		printf("Selected year is not in the data set\n");
-		return;
-	}
-
-	
-	struct team_stats* tempStruct = malloc(32 * sizeof(struct team_stats));	
-	memcpy(tempStruct, dataStruct[indexOfYear].teams, (32 * sizeof(struct team_stats)));
-
-	printf("\n##### Finding %d %s %s #####\n", year, item, field);
-
-	if(strcmp(field,"team_name") == 0 || strcmp(field,"top_per_game") == 0)
-	{
-		bFindChar(tempStruct, field, item);
-	}
-	else if(strcmp(field,"scrimmage_plays") == 0 || strcmp(field,"total_points") == 0 || strcmp(field,"third_md") == 0 
-			|| strcmp(field,"third_att") == 0 ||strcmp(field,"third_pct") == 0 || strcmp(field,"games") == 0 
-			||  strcmp(field,"fourth_md") == 0 || strcmp(field,"fourth_att") == 0 || strcmp(field,"fourth_pct") == 0 
-			|| strcmp(field,"penalties") == 0 || strcmp(field,"pen_yds") == 0 ||  strcmp(field,"fum") == 0 
-			|| strcmp(field,"lost") == 0 || strcmp(field,"to") == 0)
-	{
-		bFindInt(tempStruct, field, item);
-	}
-	else if(strcmp(field,"pts_per_game") == 0 || strcmp(field,"yds_per_play") == 0 || strcmp(field,"yds_per_game") == 0 || strcmp(field,"first_per_game") == 0)
-	{
-		bFindFloat(tempStruct, field, item);
-	}
-	else
-		printf("field unrecognized");
-
-	free(tempStruct);
-}
-/*
-void bSortR(int start, int end, char* field, char* order, struct annual_stats* dataStruct) //bSort range
-{
-	int dif = end - start;
-	int* indexOfYear = malloc(dif * sizeof(int));
-
-	for(int i = 0; i < dif; i++)
-	{	
-		for(int j = 0; j < numYears; j++)
-			if(yearArr[j] == start+i)
-				indexOfYear[i] = j;	
-
-		if(indexOfYear[i] == -1)
-		{
-			printf("Selected year is not in the data set\n");
-			return;
-		}
-	}
-
-	char* ord = "Ascending ";
-	if(order[0] == 'd')
-	       	ord = "Descending";
-
-	printf("\n#######  %d-%d  Ranking by %s  #######\n", start, end, field);
+	printf("\n#######  %d-%d  Ranking by %s  #######\n", package[0].year, package[0].year + yearDif, field);
 	printf("#######      %s Order       #######\n",ord);
 
-	struct annual_stats* tempStruct = malloc(dif * 32 * sizeof(struct team_stats));	
+	int maxIndex = NO_TEAMS + (NO_TEAMS * yearDif); //Highest index we can reach
 
-	for(int i = 0; i < dif; i++)
+	//Split fields based on data type, call appropraite function
+	if(package[0].type == 'n') //Specific name condition because the formatting is different on the print
 	{
-		for(int j = 0; j < NO_TEAMS; j++)
-		{
-			tempStruct[i].teams[j] = dataStruct[indexOfYear[i]].teams[j];
-		}
+		bSortChar(package, maxIndex);
+		//Output sorted data based on order
+		if(order[0] == 'i')
+			for(int i = 0; i < maxIndex; i++)
+				printf("%2d.\t%-25s(%d)\t\n", i+1, package[i].team_name, package[i].year);
+		else if(order[0] == 'd')
+			for(int i = maxIndex-1; i >= 0; i--)
+				printf("%2d.\t%-25s(%d)\t\n", i+1, package[i].team_name, package[i].year);
 	}
-
-	if(strcmp(field,"team_name") == 0)
+	else if(package[0].type == 'c') //Char
 	{
-		bSortCharRange(tempStruct, field, order, dif);
+		bSortChar(package, maxIndex);
+		if(order[0] == 'i')
+			for(int i = 0; i < maxIndex; i++)
+				printf("%2d.\t%-25s(%d)\t%-3s\n", i+1, package[i].team_name, package[i].year, package[i].field.c);
+		else if(order[0] == 'd')
+			for(int i = maxIndex-1; i >= 0; i--)
+				printf("%2d.\t%-25s(%d)\t%-3s\n", i+1, package[i].team_name, package[i].year, package[i].field.c);
 	}
-	else if(strcmp(field,"scrimmage_plays") == 0 || strcmp(field,"total_points") == 0 || strcmp(field,"third_md") == 0 
-			|| strcmp(field,"third_att") == 0 ||strcmp(field,"third_pct") == 0 || strcmp(field,"games") == 0 
-			||  strcmp(field,"fourth_md") == 0 || strcmp(field,"fourth_att") == 0 || strcmp(field,"fourth_pct") == 0 
-			|| strcmp(field,"penalties") == 0 || strcmp(field,"pen_yds") == 0 ||  strcmp(field,"fum") == 0 
-			|| strcmp(field,"lost") == 0 || strcmp(field,"to") == 0)
+	else if(package[0].type == 'i') //Int	
 	{
-		bSortIntRange(tempStruct, field, order, dif);
+		bSortInt(package, maxIndex);
+		if(order[0] == 'd')
+			for(int i = 0; i < maxIndex; i++)
+				printf("%2d.\t%-25s(%d)\t%d\n", i+1, package[i].team_name, package[i].year, package[i].field.i);
+		else if(order[0] == 'i')
+			for(int i = maxIndex-1; i >= 0; i--)
+				printf("%2d.\t%-25s(%d)\t%d\n", i+1, package[i].team_name, package[i].year, package[i].field.i);
 	}
-	else if(strcmp(field,"pts_per_game") == 0 || strcmp(field,"yds_per_play") == 0 || strcmp(field,"yds_per_game") == 0 || strcmp(field,"first_per_game") == 0)
+	else if(package[0].type == 'f') //Float
 	{
-		bSortFloatRange(tempStruct, field, order, dif);
+		bSortFloat(package, maxIndex);
+		if(order[0] == 'd')
+			for(int i = 0; i < maxIndex; i++)
+				printf("%2d.\t%-25s(%d)\t%-3.1f\n", i+1, package[i].team_name, package[i].year, package[i].field.f);
+		else if(order[0] == 'i')
+			for(int i = maxIndex-1; i >= 0; i--)
+				printf("%2d.\t%-25s(%d)\t%-3.1f\n", i+1, package[i].team_name, package[i].year, package[i].field.f);
 	}
 	else
 		printf("field unrecognized");
-
-	free(indexOfYear);
-	free(tempStruct);
 }
-*/
 
 /*
  * Break up commands into data that can be passed into the function
@@ -292,7 +207,6 @@ void processCommands(char* linePointer, struct annual_stats* dataStruct)
 				char* order = strtok(NULL,delim);
 
 				struct package* package = orderPackage(year, year, field, dataStruct);
-
 				bSortY(package, field, order);
 			}
 			else if(temp[0] == 'r')
@@ -302,9 +216,9 @@ void processCommands(char* linePointer, struct annual_stats* dataStruct)
 				char* field = strtok(NULL,delim);
 				char* order = strtok(NULL,delim);
 
-				printf("\n\n Sorry, bSort Range is unsupported in this version. Values passed: %d %d %s %s\n", start, end, field, order);
-				//orderPackage(start, end, field, dataStruct);
-				//bSortR(start, end, field, order, dataStruct);
+				struct package* package = orderPackage(start, end, field, dataStruct);
+
+				bSortR(package, field, order, (end - start));
 			}
 			else
 				printf("Error in calling sort function.\n");
@@ -314,8 +228,8 @@ void processCommands(char* linePointer, struct annual_stats* dataStruct)
 			int year = atoi(strtok(NULL,delim));;
 			char* field = strtok(NULL,delim);
 			char* item = strtok(NULL,delim);
-			//orderPackage(year, year, field, dataStruct);
-			//bFind( field, item, dataStruct);
+			struct package* package = orderPackage(year, year, field, dataStruct);
+			bFind(package, field, item);
 		}
 	}
 	
