@@ -128,3 +128,60 @@ void bSortY(struct package* package, char* field, char* order)
 	else
 		printf("field unrecognized");
 }
+
+void bSortR(struct package* package, char* field, char* order, int yearDif) //bSort range
+{
+	char* ord = "Ascending ";
+	if(order[0] == 'd')
+	       	ord = "Descending";
+
+	printf("\n#######  %d-%d  Ranking by %s  #######\n", package[0].year, package[0].year + yearDif, field);
+	printf("#######      %s Order       #######\n",ord);
+
+	int maxIndex = NO_TEAMS + (NO_TEAMS * yearDif); //Highest index we can reach
+
+	//Split fields based on data type, call appropraite function
+	if(package[0].type == 'n') //Specific name condition because the formatting is different on the print
+	{
+		bSortChar(package, maxIndex);
+		//Output sorted data based on order
+		if(order[0] == 'i')
+			for(int i = 0; i < maxIndex; i++)
+				printf("%2d.\t%-25s(%d)\t\n", i+1, package[i].team_name, package[i].year);
+		else if(order[0] == 'd')
+			for(int i = maxIndex-1; i >= 0; i--)
+				printf("%2d.\t%-25s(%d)\t\n", i+1, package[i].team_name, package[i].year);
+	}
+	else if(package[0].type == 'c') //Char
+	{
+		bSortChar(package, maxIndex);
+		if(order[0] == 'i')
+			for(int i = 0; i < maxIndex; i++)
+				printf("%2d.\t%-25s(%d)\t%-3s\n", i+1, package[i].team_name, package[i].year, package[i].field.c);
+		else if(order[0] == 'd')
+			for(int i = maxIndex-1; i >= 0; i--)
+				printf("%2d.\t%-25s(%d)\t%-3s\n", i+1, package[i].team_name, package[i].year, package[i].field.c);
+	}
+	else if(package[0].type == 'i') //Int	
+	{
+		bSortInt(package, maxIndex);
+		if(order[0] == 'd')
+			for(int i = 0; i < maxIndex; i++)
+				printf("%2d.\t%-25s(%d)\t%d\n", i+1, package[i].team_name, package[i].year, package[i].field.i);
+		else if(order[0] == 'i')
+			for(int i = maxIndex-1; i >= 0; i--)
+				printf("%2d.\t%-25s(%d)\t%d\n", i+1, package[i].team_name, package[i].year, package[i].field.i);
+	}
+	else if(package[0].type == 'f') //Float
+	{
+		bSortFloat(package, maxIndex);
+		if(order[0] == 'd')
+			for(int i = 0; i < maxIndex; i++)
+				printf("%2d.\t%-25s(%d)\t%-3.1f\n", i+1, package[i].team_name, package[i].year, package[i].field.f);
+		else if(order[0] == 'i')
+			for(int i = maxIndex-1; i >= 0; i--)
+				printf("%2d.\t%-25s(%d)\t%-3.1f\n", i+1, package[i].team_name, package[i].year, package[i].field.f);
+	}
+	else
+		printf("field unrecognized");
+}

@@ -51,15 +51,18 @@ struct package {
 	char type;
 };
 
-//Below are bubble sort implementations to sort various data types, sort then find, and sort larger ranges of data
+//Bubble sort implementation
+void bSortY(struct package* package, char* field, char* order);
+void bSortR(struct package* package, char* field, char* order, int yearDif);
+void bFind(struct package* package, char* field, char* item);
 void bSortChar(struct package* package, int maxIndex);
 void bSortInt(struct package* package, int maxIndex);
 void bSortFloat(struct package* package, int maxIndex);
-void bSortY(struct package* package, char* field, char* order);
-void bFind(struct package* package, char* field, char* item);
-void bSortCharRange(struct annual_stats* teamStruct, char* field, char* order, int length);
-void bSortIntRange(struct annual_stats* teamStruct, char* field, char* order, int length);
-void bSortFloatRange(struct annual_stats* teamStruct, char* field, char* order, int length);
-
-
+//Quick sort implementations
+void qSortY(struct package* package, char* field, char* order);
+void qSortR(struct package* package, char* field, char* order, int yearDif);
+void qFind(struct package* package, char* field, char* item);
+void qSortChar(struct package* package, int l, int r);
+void qSortInt(struct package* package, int l, int r);
+void qSortFloat(struct package* package, int l, int r);
 #endif /* FOOTBALL_H */
