@@ -58,7 +58,7 @@ void bSortFloat(struct package* package, int maxIndex)
 {
 	for(int i = 0; i < maxIndex - 1; i++)
 		for(int j = i+1; j < maxIndex; j++)
-			if(package[i].field.i < package[j].field.i)
+			if(package[i].field.f < package[j].field.f)
 			{
 				struct package temp = package[i];
 				package[i] = package[j];

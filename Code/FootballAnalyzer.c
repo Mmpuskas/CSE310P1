@@ -12,6 +12,7 @@
 #include "bfind.c"
 #include "qsort.c"
 #include "qfind.c"
+#include "pfunc.c"
 #include "orderPackage.c"
 
 #define NO_TEAMS      32 // Number of NFL teams
@@ -207,6 +208,20 @@ void processCommands(char* linePointer, struct annual_stats* dataStruct)
 			char* item = strtok(NULL,delim);
 			struct package* package = orderPackage(year, year, field, dataStruct);
 			qFind(package, field, item);
+		}
+		else if (strcmp(command, "pmax") == 0)
+		{
+			int year = atoi(strtok(NULL,delim));;
+			char* field = strtok(NULL,delim);
+			struct package* package = orderPackage(year, year, field, dataStruct);
+			pMax(package, field);
+		}
+		else if (strcmp(command, "pmin") == 0)
+		{
+			int year = atoi(strtok(NULL,delim));;
+			char* field = strtok(NULL,delim);
+			struct package* package = orderPackage(year, year, field, dataStruct);
+			pMin(package, field);
 		}
 	}
 }

@@ -65,4 +65,8 @@ void qFind(struct package* package, char* field, char* item);
 void qSortChar(struct package* package, int l, int r);
 void qSortInt(struct package* package, int l, int r);
 void qSortFloat(struct package* package, int l, int r);
+//Parallel Functions
+void pMax(struct package* package, char* field);
+void pMin(struct package* package, char* field);
+
 #endif /* FOOTBALL_H */

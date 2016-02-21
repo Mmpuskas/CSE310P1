@@ -29,9 +29,9 @@ void bFind(struct package* package, char* field, char* item)
 		bSortChar(package, NO_TEAMS);
 		//Output based on item
 		if(strcmp(item, "max") == 0)
-			printf("Max Found.\nMax Value for %s: %s\n", field, package[0].team_name);
+			printf("##### Max Found for %s #####\nMax Value for %s: %s\n", field, field, package[0].team_name);
 		else if(strcmp(item, "min") == 0)
-			printf("Min Found.\nMin Value for %s: %s\n", field, package[NO_TEAMS - 1].team_name);
+			printf("##### Min Found for %s #####\nMin Value for %s: %s\n", field, field, package[NO_TEAMS - 1].team_name);
 		else if(strcmp(item, "average") == 0)
 			printf("Average is undefined for team names.");
 		else if(strcmp(item, "median") == 0)
@@ -41,9 +41,9 @@ void bFind(struct package* package, char* field, char* item)
 	{
 		bSortChar(package, NO_TEAMS);
 		if(strcmp(item, "max") == 0)
-			printf("Max Found.\nMax Value for %s: %s\n", field, package[0].field.c);
+			printf("##### Max Found for %s #####\nMax Value for %s: %s\n", field, field, package[0].field.c);
 		else if(strcmp(item, "min") == 0)
-			printf("Min Found.\nMin Value for %s: %s\n", field, package[NO_TEAMS - 1].field.c);
+			printf("##### Min Found for %s #####\nMin Value for %s: %s\n", field,  field, package[NO_TEAMS - 1].field.c);
 		else if(strcmp(item, "average") == 0)
 		{
 			for(int i = 0; i < NO_TEAMS; i++)
