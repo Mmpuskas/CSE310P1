@@ -237,6 +237,8 @@ int main()
 
 	processCommands(linePointer, allYearData);
 
+	for(int i = 0; i < numYears; i++)
+		free(allYearData[i].teams);
 	free(allYearData);
 	free(linePointer);
 	allYearData = NULL;
