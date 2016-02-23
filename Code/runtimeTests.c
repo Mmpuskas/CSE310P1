@@ -86,12 +86,12 @@ int main()
 	//double b100000 = testBSort(100000);
 	//double b1000000 = testBSort(1000000);
 
-	double q10 = testBSort(10);
-	double q100 = testBSort(100);
-	double q1000 = testBSort(1000);
-	double q10000 = testBSort(10000);
-	//double q100000 = testBSort(100000);
-	//double q1000000 = testBSort(1000000);
+	double q10 = testQSort(10);
+	double q100 = testQSort(100);
+	double q1000 = testQSort(1000);
+	double q10000 = testQSort(10000);
+	//double q100000 = testQSort(100000);
+	//double q1000000 = testQSort(1000000);
 
 	printf("Time spent running Bubble Sort on n = 10: %fs\n", b10);
 	printf("Time spent running Bubble Sort on n = 100: %fs\n", b100);

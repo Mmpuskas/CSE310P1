@@ -19,7 +19,7 @@ int pMaxChar(struct package* package, int l, int r)
 	if((r - l + 1) == 1)
 		return l;
 	if((r - l + 1) == 2)
-		return (strcmp(package[l].field.c, package[l+1].field.c) < 0) ? l : l+1;
+		return (strcmp(package[l].field.c, package[l+1].field.c) > 0) ? l : l+1;
 	int mid = (r + l) / 2;
 	
 	#pragma omp task shared(m1)
@@ -27,7 +27,7 @@ int pMaxChar(struct package* package, int l, int r)
 	#pragma omp task shared(m2)
 	m2 = pMaxChar(package, mid + 1, r);
 	#pragma omp taskwait
-	return (strcmp(package[m1].field.c, package[m2].field.c) < 0) ? m1 : m2;
+	return (strcmp(package[m1].field.c, package[m2].field.c) > 0) ? m1 : m2;
 }
 int pMaxInt(struct package* package, int l, int r)
 {
@@ -94,7 +94,7 @@ int pMinChar(struct package* package, int l, int r)
 	if((r - l + 1) == 1)
 		return l;
 	if((r - l + 1) == 2)
-		return (strcmp(package[l].field.c, package[l+1].field.c) > 0) ? l : l+1;
+		return (strcmp(package[l].field.c, package[l+1].field.c) < 0) ? l : l+1;
 	int mid = (r + l) / 2;
 	
 	#pragma omp task shared(m1)
@@ -102,7 +102,7 @@ int pMinChar(struct package* package, int l, int r)
 	#pragma omp task shared(m2)
 	m2 = pMinChar(package, mid + 1, r);
 	#pragma omp taskwait
-	return (strcmp(package[m1].field.c, package[m2].field.c) > 0) ? m1 : m2;
+	return (strcmp(package[m1].field.c, package[m2].field.c) < 0) ? m1 : m2;
 }
 int pMinInt(struct package* package, int l, int r)
 {
